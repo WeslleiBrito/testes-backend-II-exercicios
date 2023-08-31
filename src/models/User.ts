@@ -1,6 +1,7 @@
 export enum USER_ROLES {
   NORMAL = "NORMAL",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
+  MASTER = "MASTER"
 }
 
 export interface UserDB {

@@ -1,4 +1,5 @@
 import { UserDatabase } from "../database/UserDatabase"
+import { DeleteInputUserByIdDTO, DeleteOutputDTO } from "../dtos/user/deleteUser.dto"
 import { GetUsersInputDTO, GetUsersOutputDTO } from "../dtos/user/getUsers.dto"
 import { LoginInputDTO, LoginOutputDTO } from "../dtos/user/login.dto"
 import { SignupInputDTO, SignupOutputDTO } from "../dtos/user/signup.dto"
@@ -130,5 +131,61 @@ export class UserBusiness {
     }
 
     return output
+  }
+
+  public deleteUserById = async (input: DeleteInputUserByIdDTO): Promise<DeleteOutputDTO> => {
+
+    const {id, token, password} = input
+
+    const tokenIsValid = this.tokenManager.getPayload(token)
+
+    if(!tokenIsValid){
+      throw new BadRequestError("Token inválido.")
+    }
+    
+    const userExist = await this.userDatabase.findUserById(id)
+
+    if(!userExist){
+      throw new NotFoundError("Usuário não localizado.")
+    }
+
+    if(tokenIsValid.role === USER_ROLES.NORMAL){
+      
+      const passwordIsValid = await this.hashManager.compare(password ? password : "", userExist.password)
+
+      if(!passwordIsValid){
+        throw new BadRequestError("Senha inválida")
+      }
+
+      if(tokenIsValid.id !== id){
+        throw new BadRequestError("Usuário NORMAL não tem permissão para deletar outro usuário.")
+      }
+    }else if(tokenIsValid.role === USER_ROLES.ADMIN){
+
+      if(tokenIsValid.role === userExist.role && tokenIsValid.id !== userExist.id){
+        throw new BadRequestError("Usuário 'ADMIN' pode deletar sua própria conta ou a conta de um usuário 'NORMAL'.")
+      }
+
+      const passwordIsValid = await this.hashManager.compare(password ? password : "", userExist.password)
+
+      if(!passwordIsValid && userExist.role === USER_ROLES.ADMIN){
+        throw new BadRequestError("Senha inválida.")
+      }
+
+    }else {
+
+      const passwordIsValid = await this.hashManager.compare(password ? password : "", userExist.password)
+
+      if(!passwordIsValid && userExist.role === USER_ROLES.MASTER){
+        throw new BadRequestError("Senha inválida.")
+      }
+
+    }
+
+    await this.userDatabase.deleteUserById(id)
+    
+    return {
+      message: `O usuário '${userExist.name}', foi deletado com sucesso!`
+    }
   }
 }
