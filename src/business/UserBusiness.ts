@@ -10,7 +10,7 @@ import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
 
-export class UserBusiness {
+export class UserBusiness implements UserBusinessInterface{
   constructor(
     private userDatabase: UserDatabase,
     private idGenerator: IdGenerator,
@@ -188,4 +188,14 @@ export class UserBusiness {
       message: `O usuário '${userExist.name}', foi deletado com sucesso!`
     }
   }
+}
+
+
+export interface UserBusinessInterface {
+
+  getUsers(input: GetUsersInputDTO): Promise<GetUsersOutputDTO>;
+  signup(input: SignupInputDTO): Promise<SignupOutputDTO>;
+  login(input: LoginInputDTO): Promise<LoginOutputDTO>;
+  deleteUserById(input: DeleteInputUserByIdDTO): Promise<DeleteOutputDTO>;
+
 }

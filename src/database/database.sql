@@ -8,13 +8,13 @@ CREATE TABLE users (
     created_at TEXT DEFAULT (DATETIME()) NOT NULL
 );
 
-INSERT INTO users (id, name, email, password, role)
-VALUES
+-- INSERT INTO users (id, name, email, password, role)
+-- VALUES
   -- conta NORMAL e senha = "fulano123"
-	('u001', 'Fulano', 'fulano@email.com', '$2a$12$kUtElOebs1Zl6CBAUc6Ndeit6M/heGgohjgYS.g6c72sbT/y.TVYK', 'NORMAL'),
+	-- ('u001', 'Fulano', 'fulano@email.com', '$2a$12$kUtElOebs1Zl6CBAUc6Ndeit6M/heGgohjgYS.g6c72sbT/y.TVYK', 'NORMAL'),
 	
   -- conta NORMAL e senha = "beltrana00"
-  ('u002', 'Beltrana', 'beltrana@email.com', '$2a$12$gO/aPYDibF3LW/X4cK2vlOHGJi/oAMFvCgU8sRe5W23vZM4oWC.Qy', 'NORMAL'),
+  --('u002', 'Beltrana', 'beltrana@email.com', '$2a$12$gO/aPYDibF3LW/X4cK2vlOHGJi/oAMFvCgU8sRe5W23vZM4oWC.Qy', 'NORMAL'),
 
   -- conta ADMIN e senha = "astrodev99"
-	('u003', 'Astrodev', 'astrodev@email.com', '$2a$12$N86uqg4FewXtEUKNaS.yduFpkL/KS8r1iCq2/heVGOhasXaLWG7ga', 'ADMIN');
+	-- ('u003', 'Astrodev', 'astrodev@email.com', '$2a$12$N86uqg4FewXtEUKNaS.yduFpkL/KS8r1iCq2/heVGOhasXaLWG7ga', 'ADMIN');
