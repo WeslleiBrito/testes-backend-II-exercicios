@@ -1,5 +1,6 @@
-import { USER_ROLES, UserDB } from "../../src/models/User";
+import { USER_ROLES, User, UserDB } from "../../src/models/User";
 import { BaseDatabase } from "../../src/database/BaseDatabase";
+import { NotFoundError } from "../../src/errors/NotFoundError";
 
 const usersMock: UserDB[] = [
   {
@@ -56,6 +57,13 @@ export class UserDatabaseMock extends BaseDatabase {
 
   public deleteUserById = async (id: string): Promise<void> => {
 
+  }
+
+  public getUserById = async (id: string): Promise<UserDB | undefined> => {
+
+    const user: UserDB | undefined = usersMock.find(user => user.id === id) 
+
+    return user
 
   }
 }

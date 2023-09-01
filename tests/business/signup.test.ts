@@ -1,5 +1,4 @@
 import { UserBusiness } from "../../src/business/UserBusiness"
-import { LoginSchema } from "../../src/dtos/user/login.dto"
 import { SignupSchema } from "../../src/dtos/user/signup.dto"
 import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"

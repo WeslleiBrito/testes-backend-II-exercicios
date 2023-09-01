@@ -1,11 +1,12 @@
 import { UserDatabase } from "../database/UserDatabase"
 import { DeleteInputUserByIdDTO, DeleteOutputDTO } from "../dtos/user/deleteUser.dto"
+import { GetUserByIdInputDTO } from "../dtos/user/getUserBy.dto"
 import { GetUsersInputDTO, GetUsersOutputDTO } from "../dtos/user/getUsers.dto"
 import { LoginInputDTO, LoginOutputDTO } from "../dtos/user/login.dto"
 import { SignupInputDTO, SignupOutputDTO } from "../dtos/user/signup.dto"
 import { BadRequestError } from "../errors/BadRequestError"
 import { NotFoundError } from "../errors/NotFoundError"
-import { TokenPayload, USER_ROLES, User } from "../models/User"
+import { TokenPayload, USER_ROLES, User, UserModel } from "../models/User"
 import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
@@ -51,6 +52,37 @@ export class UserBusiness implements UserBusinessInterface{
     const output: GetUsersOutputDTO = users
 
     return output
+  }
+
+  public getUserById = async (input: GetUserByIdInputDTO): Promise<UserModel> => {
+    const {id, token} = input
+
+    const tokenIsvalid = this.tokenManager.getPayload(token)
+
+    if(!tokenIsvalid){
+      throw new BadRequestError("Token inválido")
+    }
+
+    if(tokenIsvalid.role === USER_ROLES.NORMAL){
+      throw new BadRequestError("Usuários noramis não tem acesso a essa ferramenta.")
+    }
+
+    const [userExist] = await this.userDatabase.findUsers(id)
+
+    if(!userExist){
+      throw new NotFoundError("Usuário não encontrado.")
+    }
+
+    const newUser = new User(
+      userExist.id,
+      userExist.name,
+      userExist.email,
+      userExist.password,
+      userExist.role,
+      userExist.created_at
+    )
+
+    return newUser.toBusinessModel()
   }
 
   public signup = async (
@@ -197,5 +229,5 @@ export interface UserBusinessInterface {
   signup(input: SignupInputDTO): Promise<SignupOutputDTO>;
   login(input: LoginInputDTO): Promise<LoginOutputDTO>;
   deleteUserById(input: DeleteInputUserByIdDTO): Promise<DeleteOutputDTO>;
-
+  getUserById(input: GetUserByIdInputDTO): Promise<UserModel>;
 }
