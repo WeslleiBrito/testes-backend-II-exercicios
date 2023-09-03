@@ -67,7 +67,8 @@ export class UserBusiness implements UserBusinessInterface{
       throw new BadRequestError("Usuários noramis não tem acesso a essa ferramenta.")
     }
 
-    const [userExist] = await this.userDatabase.findUsers(id)
+    
+    const userExist = await this.userDatabase.findUserById(id)
 
     if(!userExist){
       throw new NotFoundError("Usuário não encontrado.")
@@ -98,7 +99,7 @@ export class UserBusiness implements UserBusinessInterface{
       name,
       email,
       hashedPassword,
-      USER_ROLES.NORMAL,
+      USER_ROLES.ADMIN,
       new Date().toISOString()
     )
 

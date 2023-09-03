@@ -4,13 +4,15 @@ import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { TokenManagerMock } from "../mocks/TokenManagerMock"
 import { UserDatabaseMock } from "../mocks/UserDatabaseMock"
+
 const userBusiness = new UserBusiness(
     new UserDatabaseMock(),
     new IdGeneratorMock(),
     new TokenManagerMock(),
     new HashManagerMock()
-  )
-describe("Testando signup", () => {
+)
+
+describe("Testando o delete", () => {
   
 
   test("Teste de confimação de deleção com sucesso", async () => {
